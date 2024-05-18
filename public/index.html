@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="ie-edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<link rel="stylesheet" href="assets/css/w3.css">
+		<script src="assets/js/angular.min.js"></script>
+	</head>
+	<body ng-app="app" ng-controller="ctrl">
+		<br><br>
+		<div class="w3-card-4 w3-container" style="width:40%;margin:auto">
+			<div class="w3-bar w3-padding w3-container">
+				<h4 "w3-bar-item">Shopping List</h4>
+				<button class="w3-bar-item w3-xlarge w3-circle w3-teal w3-right" ng-click="modalcontrol('modal','block')">+</button>
+			</div>
+			
+			<input type="text" placeholder="&#128269; Search" ng-model="search" class="w3-input w3-border">
+			<div class="w3-padding">
+				<table class="all">
+					<tr ng-repeat="i in items | filter:search | orderBy:'item'">
+						<td>{{ i['item']}}</td>
+						<td>{{ i['qty']}}</td>
+					</tr>
+				</table>
+			</div>
+			<div class="w3-modal" id="modal" >
+				<div class="w3-modal-content w3-animate-top" style="width:40%;margin:auto">
+					<div class="w3-container w3-teal">
+						<h3>NEW ITEM</h3>
+						<span ng-click="modalcontrol('modal','none')" class="w3-button w3-display-topright">&times;</span>
+					</div>
+					<div class="w3-container">
+						<form action="additem" method="post">
+							<p>
+								<label>ITEM</label>
+								<input type="text" class="w3-input w3-border" id="item" name="item">
+							</p>
+							<p>
+								<label>QTY</label>
+								<input type="text" class="w3-input w3-border" id="qty" name="qty">
+							</p>
+							<p>
+								<input type="submit" class="w3-button w3-blue" value="+ADD"/>
+							</p>
+					</div>
+				</div>
+			</div>
+		</div>
+			
+		<script>
+			var app = angular.module("app",[]);
+			app.controller('ctrl',function($scope,$http){
+				$http({
+					method:'GET',
+					url:'/itemlist'
+				}).then(function(response){
+					$scope.items = response.data;
+				});
+				$scope.modalcontrol = function(modalname,control){
+					document.getElementById(modalname).style.display=control;
+				}
+				
+			});
+		</script>
+	</body>
+</html>
